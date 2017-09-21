@@ -38,6 +38,12 @@ void GetBuiltinData(FragInputs input, SurfaceData surfaceData, float alpha, floa
         builtinData.bakeDiffuseLighting += SampleBakedGI(input.positionWS, -input.worldToTangent[2], input.texCoord1, input.texCoord2) * bsdfData.transmittance;
     }
 
+#if SHADEROPTIONS_BAKED_SHADOW_MASK_ENABLE
+    builtinData.shadowMask = SampleShadowMask(input.positionWS, input.texCoord1);
+#else
+    builtinData.shadowMask = float4(1.0, 0.0, 0.0, 0.0);
+#endif
+
     // Emissive Intensity is only use here, but is part of BuiltinData to enforce UI parameters as we want the users to fill one color and one intensity
     builtinData.emissiveIntensity = _EmissiveIntensity; // We still store intensity here so we can reuse it with debug code
 

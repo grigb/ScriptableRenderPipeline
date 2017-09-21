@@ -175,6 +175,7 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
         internal static readonly int _IrradianceSource               = Shader.PropertyToID("_IrradianceSource");
 
         internal static readonly int _VelocityTexture = Shader.PropertyToID("_VelocityTexture");
+        internal static readonly int _ShadowMaskTexture = Shader.PropertyToID("_ShadowMaskTexture");        
         internal static readonly int _DistortionTexture = Shader.PropertyToID("_DistortionTexture");
         internal static readonly int _DebugFullScreenTexture = Shader.PropertyToID("_DebugFullScreenTexture");
 

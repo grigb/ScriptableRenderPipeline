@@ -156,7 +156,7 @@ void applyWeigthedIblLighting(float3 localDiffuseLighting, float3 localSpecularL
 }
 
 // bakeDiffuseLighting is part of the prototype so a user is able to implement a "base pass" with GI and multipass direct light (aka old unity rendering path)
-void LightLoop( float3 V, PositionInputs posInput, PreLightData preLightData, BSDFData bsdfData, float3 bakeDiffuseLighting, uint featureFlags,
+void LightLoop( float3 V, PositionInputs posInput, PreLightData preLightData, BSDFData bsdfData, BakeLightingData bakeLightingData, uint featureFlags,
                 out float3 diffuseLighting,
                 out float3 specularLighting)
 {
@@ -166,6 +166,9 @@ void LightLoop( float3 V, PositionInputs posInput, PreLightData preLightData, BS
     // We store inverse AO so neutral is black. So either we sample inside or outside the texture it return 0 in case of neutral
     context.indirectAmbientOcclusion = 1.0 - LOAD_TEXTURE2D(_AmbientOcclusionTexture, posInput.unPositionSS).x;
     context.directAmbientOcclusion = lerp(1.0, context.indirectAmbientOcclusion, _AmbientOcclusionDirectLightStrenght);
+#if SHADEROPTIONS_BAKED_SHADOW_MASK_ENABLE
+    context.shadowMask = bakeLightingData.bakeShadowMask;
+#endif
     context.sampleShadow = 0;
     context.sampleReflection = 0;
     context.shadowContext = InitShadowContext();
@@ -342,7 +345,7 @@ void LightLoop( float3 V, PositionInputs posInput, PreLightData preLightData, BS
 
     // Also Apply indiret diffuse (GI)
     // PostEvaluateBSDF will perform any operation wanted by the material and sum everything into diffuseLighting and specularLighting
-    PostEvaluateBSDF(   context, preLightData, bsdfData, accLighting, bakeDiffuseLighting,
+    PostEvaluateBSDF(   context, preLightData, bsdfData, accLighting, bakeLightingData.bakeDiffuseLighting,
                         diffuseLighting, specularLighting);
 
     ApplyDebug(context, posInput.positionWS, diffuseLighting, specularLighting);

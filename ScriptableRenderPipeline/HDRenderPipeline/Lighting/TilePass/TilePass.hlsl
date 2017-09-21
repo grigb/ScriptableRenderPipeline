@@ -73,6 +73,9 @@ struct LightLoopContext
     // Visible from Material - these values are expected in any LightLoopContext
     float indirectAmbientOcclusion; // Ambient occlusion use for indirect lighting (reflection probe, baked diffuse lighting)
     float directAmbientOcclusion;   // Ambient occlusion use for direct lighting (directional, punctual, area)
+#if SHADEROPTIONS_BAKED_SHADOW_MASK_ENABLE
+    float4 shadowMask;
+#endif
 
     // Not visible from Material (user should not use these properties in Material file)
     int sampleShadow;

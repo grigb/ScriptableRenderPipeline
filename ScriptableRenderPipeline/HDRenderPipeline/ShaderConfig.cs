@@ -18,7 +18,8 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
         VelocityInGBuffer = 0, // Change to 1 to enable the feature, then regenerate hlsl headers.
         // TODO: not working yet, waiting for UINT16 RT format support
         PackGBufferInU16 = 0,
-        CameraRelativeRendering = 1 // Rendering sets the origin of the world to the position of the primary (scene view) camera
+        CameraRelativeRendering = 1, // Rendering sets the origin of the world to the position of the primary (scene view) camera
+        BakedShadowMaskEnable = 1
     };
 
     // Note: #define can't be use in include file in C# so we chose this way to configure both C# and hlsl
@@ -27,8 +28,8 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
     {
         // const variable produce warning like this one: warning CS0162: Unreachable code detected
         // If we want to avoid them we can add #pragma warning disable 162, however doing that make the debugger shift his line count when debugging which is really annoying
-        // so here we decalare two kind of variable, one const that can be use in enum init and one static so the compiler doesn't complain. It mean that the conditional code will stay
-        // but it is usually small, so we are fine with it (until someone at microsoft fix the debuggger).
+        // so here we declare two kind of variable, one const that can be use in enum init and one static so the compiler doesn't complain. It mean that the conditional code will stay
+        // but it is usually small, so we are fine with it (until someone at Microsoft fix the debugger).
         public const int k_VelocityInGbuffer = (int)ShaderOptions.VelocityInGBuffer;
         public static int s_VelocityInGbuffer = (int)ShaderOptions.VelocityInGBuffer;
 
@@ -37,5 +38,8 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
 
         public const int k_CameraRelativeRendering = (int)ShaderOptions.CameraRelativeRendering;
         public static int s_CameraRelativeRendering = (int)ShaderOptions.CameraRelativeRendering;
+
+        public const int k_BakedShadowMaskEnable = (int)ShaderOptions.BakedShadowMaskEnable;
+        public static int s_BakedShadowMaskEnable = (int)ShaderOptions.BakedShadowMaskEnable;
     }
 }

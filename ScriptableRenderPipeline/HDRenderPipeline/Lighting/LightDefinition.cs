@@ -64,11 +64,14 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
         public float angleScale;  // Spot light
         public float angleOffset; // Spot light
         public float shadowDimmer;
-        public int unused0;
+        public bool dynamicShadowCasterOnly; // Use with ShadowMask feature
 
         public Vector2 size;      // Used by area, frustum projector and spot lights (x = cot(outerHalfAngle))
         public GPULightType lightType;
         public float minRoughness;  // This is use to give a small "area" to punctual light, as if we have a light with a radius.
+
+        // Note: We have no way to remove these value automatically based on either SHADEROPTIONS_BAKED_SHADOW_MASK_ENABLE or s_BakedShadowMaskEnable here. Unless we make two structure... For now always keep this value
+        public Vector4 bakedOcclusionMask; // Use with ShadowMask feature
     };
 
 

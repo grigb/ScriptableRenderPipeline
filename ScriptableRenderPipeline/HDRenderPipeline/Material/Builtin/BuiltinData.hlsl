@@ -13,6 +13,18 @@
 //-----------------------------------------------------------------------------
 // common Encode/Decode functions
 //-----------------------------------------------------------------------------
+struct BakeLightingData
+{
+    float3 bakeDiffuseLighting;
+#if SHADEROPTIONS_BAKED_SHADOW_MASK_ENABLE
+    float4 bakeShadowMask;
+#endif
+};
+
+
+//-----------------------------------------------------------------------------
+// common Encode/Decode functions
+//-----------------------------------------------------------------------------
 
 // Guideline for velocity buffer.
 // We support various architecture for HDRenderPipeline
@@ -34,8 +46,19 @@
 // - Same velocity buffer is use for all scenario, so if deferred define a velocity buffer, the same is reuse for forward case.
 // For these reasons we chose to avoid to pack velocity buffer with anything else in case of PackgbufferInFP16 (and also in case the format change)
 
-// Encode/Decode velocity/distortion in a buffer (either forward of deferred)
-// Design note: We assume that velocity/distortion fit into a single buffer (i.e not spread on several buffer)
+// Encode/Decode shadowmaskvelocity/distortion in a buffer (either forward of deferred)
+// Design note: We assume that shadowmask/velocity/distortion fit into a single buffer (i.e not spread on several buffer)
+void EncodeShadowMask(float4 shadowMask, out float4 outBuffer)
+{
+    // RT - RGBA
+    outBuffer = shadowMask;
+}
+
+void DecodeShadowMask(float4 inBuffer, out float4 shadowMask)
+{
+    shadowMask = inBuffer;
+}
+
 void EncodeVelocity(float2 velocity, out float4 outBuffer)
 {
     // RT - 16:16 float

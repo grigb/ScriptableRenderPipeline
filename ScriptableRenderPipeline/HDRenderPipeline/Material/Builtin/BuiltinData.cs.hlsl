@@ -1,5 +1,5 @@
 //
-// This file was automatically generated from Assets/ScriptableRenderPipeline/HDRenderPipeline/Material/Builtin/BuiltinData.cs.  Please don't edit by hand.
+// This file was automatically generated from Assets/ScriptableRenderLoop/ScriptableRenderPipeline/HDRenderPipeline/Material/Builtin/BuiltinData.cs.  Please don't edit by hand.
 //
 
 #ifndef BUILTINDATA_CS_HLSL
@@ -12,9 +12,10 @@
 #define DEBUGVIEW_BUILTIN_BUILTINDATA_EMISSIVE_COLOR (102)
 #define DEBUGVIEW_BUILTIN_BUILTINDATA_EMISSIVE_INTENSITY (103)
 #define DEBUGVIEW_BUILTIN_BUILTINDATA_VELOCITY (104)
-#define DEBUGVIEW_BUILTIN_BUILTINDATA_DISTORTION (105)
-#define DEBUGVIEW_BUILTIN_BUILTINDATA_DISTORTION_BLUR (106)
-#define DEBUGVIEW_BUILTIN_BUILTINDATA_DEPTH_OFFSET (107)
+#define DEBUGVIEW_BUILTIN_BUILTINDATA_SHADOW_MASK (105)
+#define DEBUGVIEW_BUILTIN_BUILTINDATA_DISTORTION (106)
+#define DEBUGVIEW_BUILTIN_BUILTINDATA_DISTORTION_BLUR (107)
+#define DEBUGVIEW_BUILTIN_BUILTINDATA_DEPTH_OFFSET (108)
 
 //
 // UnityEngine.Experimental.Rendering.HDPipeline.Builtin+LightTransportData:  static fields
@@ -31,6 +32,7 @@ struct BuiltinData
     float3 emissiveColor;
     float emissiveIntensity;
     float2 velocity;
+    float4 shadowMask;
     float2 distortion;
     float distortionBlur;
     float depthOffset;
@@ -67,6 +69,9 @@ void GetGeneratedBuiltinDataDebug(uint paramId, BuiltinData builtindata, inout f
             break;
         case DEBUGVIEW_BUILTIN_BUILTINDATA_VELOCITY:
             result = float3(builtindata.velocity, 0.0);
+            break;
+        case DEBUGVIEW_BUILTIN_BUILTINDATA_SHADOW_MASK:
+            result = builtindata.shadowMask.xyz;
             break;
         case DEBUGVIEW_BUILTIN_BUILTINDATA_DISTORTION:
             result = float3(builtindata.distortion, 0.0);

@@ -35,6 +35,10 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
             [SurfaceDataAttributes("Velocity")]
             public Vector2 velocity;
 
+            // Note: We have no way to remove these value automatically based on either SHADEROPTIONS_BAKED_SHADOW_MASK_ENABLE or s_BakedShadowMaskEnable here. Unless we make two structure... For now always keep this value
+            [SurfaceDataAttributes("Shadow Mask")]
+            public Vector4 shadowMask;
+
             // Distortion
             [SurfaceDataAttributes("Distortion")]
             public Vector2 distortion;
@@ -64,6 +68,16 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
         }
 
         public static RenderTextureReadWrite GetVelocityBufferReadWrite()
+        {
+            return RenderTextureReadWrite.Linear;
+        }
+
+        public static RenderTextureFormat GetShadowMaskBufferFormat()
+        {
+            return RenderTextureFormat.ARGB32;
+        }
+
+        public static RenderTextureReadWrite GetShadowMaskBufferReadWrite()
         {
             return RenderTextureReadWrite.Linear;
         }

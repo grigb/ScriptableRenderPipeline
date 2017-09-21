@@ -62,6 +62,9 @@ Shader "Hidden/HDRenderPipeline/Deferred"
             //-------------------------------------------------------------------------------------
 
             DECLARE_GBUFFER_TEXTURE(_GBufferTexture);
+            #if SHADEROPTIONS_BAKED_SHADOW_MASK_ENABLE
+            TEXTURE2D(_ShadowMaskTexture);
+            #endif
 
             struct Attributes
             {
@@ -104,14 +107,17 @@ Shader "Hidden/HDRenderPipeline/Deferred"
 
                 FETCH_GBUFFER(gbuffer, _GBufferTexture, posInput.unPositionSS);
                 BSDFData bsdfData;
-                float3 bakeDiffuseLighting;
-                DECODE_FROM_GBUFFER(gbuffer, featureFlags, bsdfData, bakeDiffuseLighting);
+                BakeLightingData bakeLightingData;;
+                DECODE_FROM_GBUFFER(gbuffer, featureFlags, bsdfData, bakeLightingData.bakeDiffuseLighting);
+            #if SHADEROPTIONS_BAKED_SHADOW_MASK_ENABLE
+                DecodeShadowMask(LOAD_TEXTURE2D(_ShadowMaskTexture, posInput.unPositionSS), bakeLightingData.bakeShadowMask);
+            #endif
 
                 PreLightData preLightData = GetPreLightData(V, posInput, bsdfData);
 
                 float3 diffuseLighting;
                 float3 specularLighting;
-                LightLoop(V, posInput, preLightData, bsdfData, bakeDiffuseLighting, featureFlags, diffuseLighting, specularLighting);
+                LightLoop(V, posInput, preLightData, bsdfData, bakeLightingData, featureFlags, diffuseLighting, specularLighting);
 
                 Outputs outputs;
             #ifdef OUTPUT_SPLIT_LIGHTING

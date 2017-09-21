@@ -1158,7 +1158,16 @@ void EvaluateBSDF_Punctual( LightLoopContext lightLoopContext,
 
     diffuseLighting  = float3(0, 0, 0); // TODO: check whether using 'out' instead of 'inout' increases the VGPR pressure
     specularLighting = float3(0, 0, 0); // TODO: check whether using 'out' instead of 'inout' increases the VGPR pressure
-    float shadow     = 1;
+    float shadow     = 1.0;
+    float shadowMask = 1.0;
+
+#if SHADEROPTIONS_BAKED_SHADOW_MASK_ENABLE
+    [branch] if (lightData.bakedOcclusionMask.x >= 0.0) // bakedOcclusionMask.x is -1 if there is no shadow mask
+    {
+        // Note that we override shadow value (in case we don't have any dynamic shadow)
+        shadow = shadowMask = dot(lightLoopContext.shadowMask, lightData.bakedOcclusionMask);
+    }
+#endif
 
     [branch] if (lightData.shadowIndex >= 0)
     {
@@ -1166,9 +1175,22 @@ void EvaluateBSDF_Punctual( LightLoopContext lightLoopContext,
         float3 offset = float3(0.0, 0.0, 0.0); // GetShadowPosOffset(nDotL, normal);
         float4 L_dist = { L, dist };
         shadow = GetPunctualShadowAttenuation(lightLoopContext.shadowContext, positionWS + offset, bsdfData.normalWS, lightData.shadowIndex, L_dist, posInput.unPositionSS);
+#if SHADEROPTIONS_BAKED_SHADOW_MASK_ENABLE
+        // Note: Legacy Unity have two shadow mask mode. ShadowMask (ShadowMask contain static objects shadow and ShadowMap contain only dynamic objects shadow, final result is the minimun of both value) 
+        // and ShadowMask_Distance (ShadowMask contain static objects shadow and ShadowMap contain everything and is blend with ShadowMask based on distance (Global distance setup in QualitySettigns)).
+        // HDRenderPipeline change this behavior. Only ShadowMask mode is supported but we support both blend with distance AND minimun of both value. Distance is control by light.
+        // The following code do this.
+        // The min handle the case of having only dynamic objects in the ShadowMap
+        // The second case for blend with distance is handlded with ShadowDimmer. ShadowDimmer is define manually and by shadowDistance by light. 
+        // With distance, ShadowDimmer become one and only the ShadowMask appea, we get the blend with distance behavior.
+        shadow = lightData.dynamicShadowCasterOnly ? min(shadowMask, shadow) : shadow;
+        shadow = lerp(shadowMask, shadow, lightData.shadowDimmer);
+#else
         shadow = lerp(1.0, shadow, lightData.shadowDimmer);
-        illuminance *= shadow;
+#endif
     }
+
+    illuminance *= shadow;
 
 #ifdef VOLUMETRIC_SHADOWING_ENABLED
     float volumetricShadow = Transmittance(OpticalDepthHomogeneous(preLightData.globalFogExtinction, dist));

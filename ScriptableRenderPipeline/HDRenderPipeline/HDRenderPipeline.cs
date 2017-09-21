@@ -318,7 +318,8 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
         readonly int m_CameraFilteringBuffer;
         // <<< Old SSS Model
         readonly int m_VelocityBuffer;
-        readonly int m_DistortionBuffer;
+        readonly int m_ShadowMaskBuffer;   
+        readonly int m_DistortionBuffer;                 
 
         readonly int m_DeferredShadowBuffer;
 
@@ -329,6 +330,7 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
         readonly RenderTargetIdentifier m_CameraFilteringBufferRT;
         // <<< Old SSS Model
         readonly RenderTargetIdentifier m_VelocityBufferRT;
+        readonly RenderTargetIdentifier m_ShadowMaskBufferRT;        
         readonly RenderTargetIdentifier m_DistortionBufferRT;
 
         readonly RenderTargetIdentifier m_DeferredShadowBufferRT;
@@ -473,7 +475,16 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
             {
                 m_gbufferManager.SetBufferDescription(gbufferIndex, "_GBufferTexture" + gbufferIndex, RTFormat[gbufferIndex], RTReadWrite[gbufferIndex]);
             }
+            
+            if (ShaderConfig.s_BakedShadowMaskEnable == 1)
+            {
+                m_ShadowMaskBuffer = HDShaderIDs._ShadowMaskTexture;
+                m_gbufferManager.SetBufferDescription(m_gbufferManager.gbufferCount, "_ShadowMaskTexture", Builtin.GetShadowMaskBufferFormat(), Builtin.GetShadowMaskBufferReadWrite());
+                m_gbufferManager.gbufferCount++;
+                m_ShadowMaskBufferRT = new RenderTargetIdentifier(m_ShadowMaskBuffer);
+            }            
 
+            // Velocity buffer always exist, even if not fil during Gbuffer pass
             m_VelocityBuffer = HDShaderIDs._VelocityTexture;
             if (ShaderConfig.s_VelocityInGbuffer == 1)
             {

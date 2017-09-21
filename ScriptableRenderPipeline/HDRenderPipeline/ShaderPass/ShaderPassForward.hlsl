@@ -1,4 +1,4 @@
-﻿#if SHADERPASS != SHADERPASS_FORWARD
+#if SHADERPASS != SHADERPASS_FORWARD
 #error SHADERPASS_is_not_correctly_define
 #endif
 
@@ -56,8 +56,12 @@ void Frag(PackedVaryingsToPS packedInput,
     uint featureFlags = 0xFFFFFFFF;
     float3 diffuseLighting;
     float3 specularLighting;
-    float3 bakeDiffuseLighting = GetBakedDiffuseLigthing(surfaceData, builtinData, bsdfData, preLightData);
-    LightLoop(V, posInput, preLightData, bsdfData, bakeDiffuseLighting, featureFlags, diffuseLighting, specularLighting);
+    BakeLightingData bakeLightingData;
+    bakeLightingData.bakeDiffuseLighting = GetBakedDiffuseLigthing(surfaceData, builtinData, bsdfData, preLightData);
+#if SHADEROPTIONS_BAKED_SHADOW_MASK_ENABLE
+    bakeLightingData.bakeShadowMask = builtinData.shadowMask;
+#endif
+    LightLoop(V, posInput, preLightData, bsdfData, bakeLightingData, featureFlags, diffuseLighting, specularLighting);
 
     outColor = float4(diffuseLighting + specularLighting, builtinData.opacity);
     }

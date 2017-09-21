@@ -884,6 +884,22 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
                 // Value of max smoothness is from artists point of view, need to convert from perceptual smoothness to roughness
                 lightData.minRoughness = (1.0f - additionalLightData.maxSmoothness) * (1.0f - additionalLightData.maxSmoothness);
 
+                lightData.bakedOcclusionMask = Vector4.zero;
+
+                if (ShaderConfig.s_BakedShadowMaskEnable == 1 && 
+                    light.light.bakingOutput.lightmapBakeType == LightmapBakeType.Mixed && light.light.bakingOutput.mixedLightingMode == MixedLightingMode.Shadowmask && light.light.bakingOutput.occlusionMaskChannel != -1)
+                {
+                    lightData.bakedOcclusionMask[light.light.bakingOutput.occlusionMaskChannel] = 1.0f;
+                    // TODO: make this option per light, not global
+                    lightData.dynamicShadowCasterOnly = QualitySettings.shadowmaskMode == ShadowmaskMode.Shadowmask;
+                }
+                else
+                {
+                    // use -1 to say that we don't use shadow mask
+                    lightData.bakedOcclusionMask.x = -1.0f;
+                    lightData.dynamicShadowCasterOnly = false;
+                }
+
                 m_lightList.lights.Add(lightData);
 
                 return true;
