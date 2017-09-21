@@ -12,10 +12,13 @@
 #define DEBUGVIEW_BUILTIN_BUILTINDATA_EMISSIVE_COLOR (102)
 #define DEBUGVIEW_BUILTIN_BUILTINDATA_EMISSIVE_INTENSITY (103)
 #define DEBUGVIEW_BUILTIN_BUILTINDATA_VELOCITY (104)
-#define DEBUGVIEW_BUILTIN_BUILTINDATA_SHADOW_MASK (105)
-#define DEBUGVIEW_BUILTIN_BUILTINDATA_DISTORTION (106)
-#define DEBUGVIEW_BUILTIN_BUILTINDATA_DISTORTION_BLUR (107)
-#define DEBUGVIEW_BUILTIN_BUILTINDATA_DEPTH_OFFSET (108)
+#define DEBUGVIEW_BUILTIN_BUILTINDATA_SHADOW_MASK0 (105)
+#define DEBUGVIEW_BUILTIN_BUILTINDATA_SHADOW_MASK1 (106)
+#define DEBUGVIEW_BUILTIN_BUILTINDATA_SHADOW_MASK2 (107)
+#define DEBUGVIEW_BUILTIN_BUILTINDATA_SHADOW_MASK3 (108)
+#define DEBUGVIEW_BUILTIN_BUILTINDATA_DISTORTION (109)
+#define DEBUGVIEW_BUILTIN_BUILTINDATA_DISTORTION_BLUR (110)
+#define DEBUGVIEW_BUILTIN_BUILTINDATA_DEPTH_OFFSET (111)
 
 //
 // UnityEngine.Experimental.Rendering.HDPipeline.Builtin+LightTransportData:  static fields
@@ -32,7 +35,10 @@ struct BuiltinData
     float3 emissiveColor;
     float emissiveIntensity;
     float2 velocity;
-    float4 shadowMask;
+    float shadowMask0;
+    float shadowMask1;
+    float shadowMask2;
+    float shadowMask3;
     float2 distortion;
     float distortionBlur;
     float depthOffset;
@@ -70,8 +76,17 @@ void GetGeneratedBuiltinDataDebug(uint paramId, BuiltinData builtindata, inout f
         case DEBUGVIEW_BUILTIN_BUILTINDATA_VELOCITY:
             result = float3(builtindata.velocity, 0.0);
             break;
-        case DEBUGVIEW_BUILTIN_BUILTINDATA_SHADOW_MASK:
-            result = builtindata.shadowMask.xyz;
+        case DEBUGVIEW_BUILTIN_BUILTINDATA_SHADOW_MASK0:
+            result = builtindata.shadowMask0.xxx;
+            break;
+        case DEBUGVIEW_BUILTIN_BUILTINDATA_SHADOW_MASK1:
+            result = builtindata.shadowMask1.xxx;
+            break;
+        case DEBUGVIEW_BUILTIN_BUILTINDATA_SHADOW_MASK2:
+            result = builtindata.shadowMask2.xxx;
+            break;
+        case DEBUGVIEW_BUILTIN_BUILTINDATA_SHADOW_MASK3:
+            result = builtindata.shadowMask3.xxx;
             break;
         case DEBUGVIEW_BUILTIN_BUILTINDATA_DISTORTION:
             result = float3(builtindata.distortion, 0.0);

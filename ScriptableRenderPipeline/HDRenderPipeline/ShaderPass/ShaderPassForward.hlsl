@@ -59,7 +59,7 @@ void Frag(PackedVaryingsToPS packedInput,
     BakeLightingData bakeLightingData;
     bakeLightingData.bakeDiffuseLighting = GetBakedDiffuseLigthing(surfaceData, builtinData, bsdfData, preLightData);
 #if SHADEROPTIONS_BAKED_SHADOW_MASK_ENABLE
-    bakeLightingData.bakeShadowMask = builtinData.shadowMask;
+    bakeLightingData.bakeShadowMask = float4(builtinData.shadowMask0, builtinData.shadowMask1, builtinData.shadowMask2, builtinData.shadowMask3);
 #endif
     LightLoop(V, posInput, preLightData, bsdfData, bakeLightingData, featureFlags, diffuseLighting, specularLighting);
 

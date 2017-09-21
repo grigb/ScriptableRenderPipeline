@@ -28,6 +28,11 @@ void GetSurfaceAndBuiltinData(FragInputs input, float3 V, inout PositionInputs p
 
     builtinData.velocity = float2(0.0, 0.0);
 
+    builtinData.shadowMask0 = 0.0;
+    builtinData.shadowMask1 = 0.0;
+    builtinData.shadowMask2 = 0.0;
+    builtinData.shadowMask3 = 0.0;
+
 #ifdef _DISTORTION_ON
     float3 distortion = SAMPLE_TEXTURE2D(_DistortionVectorMap, sampler_DistortionVectorMap, input.texCoord0).rgb;
     builtinData.distortion = distortion.rg;

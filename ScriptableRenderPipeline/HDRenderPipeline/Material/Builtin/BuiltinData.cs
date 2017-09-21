@@ -37,7 +37,11 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
 
             // Note: We have no way to remove these value automatically based on either SHADEROPTIONS_BAKED_SHADOW_MASK_ENABLE or s_BakedShadowMaskEnable here. Unless we make two structure... For now always keep this value
             [SurfaceDataAttributes("Shadow Mask")]
-            public Vector4 shadowMask;
+            // Use for float instead of vector4 to ease the debug (no performance impact)
+            public float shadowMask0;
+            public float shadowMask1;
+            public float shadowMask2;
+            public float shadowMask3;
 
             // Distortion
             [SurfaceDataAttributes("Distortion")]
