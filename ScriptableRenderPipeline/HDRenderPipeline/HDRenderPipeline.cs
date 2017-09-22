@@ -1120,7 +1120,7 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
                 // setup GBuffer for rendering
                 Utilities.SetRenderTarget(cmd, m_gbufferManager.GetGBuffers(), m_CameraDepthStencilBufferRT);
                 // render opaque objects into GBuffer
-                RenderOpaqueRenderList(cull, camera, renderContext, cmd, m_CurrentDebugDisplaySettings.IsDebugDisplayEnabled() ? HDShaderPassNames.m_GBufferDebugDisplayName : HDShaderPassNames.m_GBufferName, Utilities.kRendererConfigurationBakedLighting);
+                RenderOpaqueRenderList(cull, camera, renderContext, cmd, m_CurrentDebugDisplaySettings.IsDebugDisplayEnabled() ? HDShaderPassNames.m_GBufferDebugDisplayName : HDShaderPassNames.m_GBufferName, Utilities.GetRendererConfigurationBakedLighting());
             }
         }
 
@@ -1139,10 +1139,10 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
                 {
                     Utilities.SetRenderTarget(cmd, m_CameraColorBufferRT, m_CameraDepthStencilBufferRT, Utilities.kClearAll, Color.black);
                     // Render Opaque forward
-                    RenderOpaqueRenderList(cull, hdCamera.camera, renderContext, cmd, HDShaderPassNames.m_ForwardDisplayDebugName, Utilities.kRendererConfigurationBakedLighting);
+                    RenderOpaqueRenderList(cull, hdCamera.camera, renderContext, cmd, HDShaderPassNames.m_ForwardDisplayDebugName, Utilities.GetRendererConfigurationBakedLighting());
 
                     // Render forward transparent
-                    RenderTransparentRenderList(cull, hdCamera.camera, renderContext, cmd, HDShaderPassNames.m_ForwardDisplayDebugName, Utilities.kRendererConfigurationBakedLighting);
+                    RenderTransparentRenderList(cull, hdCamera.camera, renderContext, cmd, HDShaderPassNames.m_ForwardDisplayDebugName, Utilities.GetRendererConfigurationBakedLighting());
                 }
             }
 
@@ -1295,11 +1295,11 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
 
                 if (renderOpaque)
                 {
-                    RenderOpaqueRenderList(cullResults, camera, renderContext, cmd, arrayNames, Utilities.kRendererConfigurationBakedLighting);
+                    RenderOpaqueRenderList(cullResults, camera, renderContext, cmd, arrayNames, Utilities.GetRendererConfigurationBakedLighting());
                 }
                 else
                 {
-                    RenderTransparentRenderList(cullResults, camera, renderContext, cmd, arrayNames, Utilities.kRendererConfigurationBakedLighting);
+                    RenderTransparentRenderList(cullResults, camera, renderContext, cmd, arrayNames, Utilities.GetRendererConfigurationBakedLighting());
                 }
             }
         }

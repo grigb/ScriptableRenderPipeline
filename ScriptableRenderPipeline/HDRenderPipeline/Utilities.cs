@@ -67,7 +67,12 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
         }
 
         public const RendererConfiguration kRendererConfigurationBakedLighting = RendererConfiguration.PerObjectLightProbe | RendererConfiguration.PerObjectLightmaps | RendererConfiguration.PerObjectLightProbeProxyVolume;
+        public const RendererConfiguration kRendererConfigurationBakedLightingWithShadowMask = RendererConfiguration.PerObjectLightProbe | RendererConfiguration.PerObjectLightmaps | RendererConfiguration.PerObjectLightProbeProxyVolume | RendererConfiguration.PerObjectOcclusionProbe | RendererConfiguration.PerObjectShadowMasks;
 
+        public static RendererConfiguration GetRendererConfigurationBakedLighting()
+        {
+            return (ShaderConfig.k_BakedShadowMaskEnable == 1) ? kRendererConfigurationBakedLightingWithShadowMask : kRendererConfigurationBakedLighting;
+        }
 
         // Render Target Management.
         public const ClearFlag kClearAll = ClearFlag.ClearDepth | ClearFlag.ClearColor;
