@@ -19,6 +19,13 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
         // TODO: not working yet, waiting for UINT16 RT format support
         PackGBufferInU16 = 0,
         CameraRelativeRendering = 1, // Rendering sets the origin of the world to the position of the primary (scene view) camera
+
+        // Note: Legacy Unity behave like this for ShadowMask
+        // When you select ShadowMask in Lighting panel it recompile shaders on the fly with the SHADOW_MASK keyword.
+        // However there is no C# function that we can query to know what mode have been select in Lighting Panel and it will be wrong anyway. Lighting Panel setup what will be the next bake mode. But until light is bake, it is wrong.
+        // Currently to know if you need shadow mask you need to go through all visible lights (of CullResult), check the LightBakingOutput struct and look at lightmapBakeType/mixedLightingMode. If one light have shadow mask bake mode, then you need shadow mask features (i.e extra Gbuffer).
+        // It mean that when we build a standalone player, if we detect a light with bake shadow mask, we generate all shader variant (with and without shadow mask) and at runtime, when a bake shadow mask light is visible, we dynamically allocate an extra GBuffer and switch the shader.
+        // For HDRenderPipeline we have change this behavior. The choice of using or not shadow mask is static for the game. It allow us to only compile required variant and not do dynamic GBuffer allocation. TODO: discuss with team what is best.
         BakedShadowMaskEnable = 1
     };
 
