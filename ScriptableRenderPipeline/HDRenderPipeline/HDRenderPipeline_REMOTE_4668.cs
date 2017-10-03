@@ -319,8 +319,7 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
         readonly int m_CameraFilteringBuffer;
         // <<< Old SSS Model
         readonly int m_VelocityBuffer;
-        readonly int m_ShadowMaskBuffer;   
-        readonly int m_DistortionBuffer;                 
+        readonly int m_DistortionBuffer;
 
         readonly int m_DeferredShadowBuffer;
 
@@ -331,7 +330,6 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
         readonly RenderTargetIdentifier m_CameraFilteringBufferRT;
         // <<< Old SSS Model
         readonly RenderTargetIdentifier m_VelocityBufferRT;
-        readonly RenderTargetIdentifier m_ShadowMaskBufferRT;        
         readonly RenderTargetIdentifier m_DistortionBufferRT;
 
         readonly RenderTargetIdentifier m_DeferredShadowBufferRT;
@@ -479,16 +477,7 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
             {
                 m_gbufferManager.SetBufferDescription(gbufferIndex, "_GBufferTexture" + gbufferIndex, RTFormat[gbufferIndex], RTReadWrite[gbufferIndex]);
             }
-            
-            if (ShaderConfig.s_BakedShadowMaskEnable == 1)
-            {
-                m_ShadowMaskBuffer = HDShaderIDs._ShadowMaskTexture;
-                m_gbufferManager.SetBufferDescription(m_gbufferManager.gbufferCount, "_ShadowMaskTexture", Builtin.GetShadowMaskBufferFormat(), Builtin.GetShadowMaskBufferReadWrite());
-                m_gbufferManager.gbufferCount++;
-                m_ShadowMaskBufferRT = new RenderTargetIdentifier(m_ShadowMaskBuffer);
-            }            
 
-            // Velocity buffer always exist, even if not fil during Gbuffer pass
             m_VelocityBuffer = HDShaderIDs._VelocityTexture;
             if (ShaderConfig.s_VelocityInGbuffer == 1)
             {
@@ -1196,7 +1185,7 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
                 if (m_CurrentDebugDisplaySettings.IsDebugDisplayEnabled())
                 {
                     // When doing debug display, the shader has the clip instruction regardless of the depth prepass so we can use regular depth test.
-                    RenderOpaqueRenderList(cull, camera, renderContext, cmd, HDShaderPassNames.m_GBufferDebugDisplayName, Utilities.GetRendererConfigurationBakedLighting(), RenderQueueRange.opaque, m_DepthStateOpaque);
+                    RenderOpaqueRenderList(cull, camera, renderContext, cmd, HDShaderPassNames.m_GBufferDebugDisplayName, Utilities.kRendererConfigurationBakedLighting, RenderQueueRange.opaque, m_DepthStateOpaque);
                 }
                 else
                 {
@@ -1208,12 +1197,12 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
                         // When using depth prepass for opaque alpha test only we need to use regular depth test for normal opaque objects.
                         RenderOpaqueRenderList(cull, camera, renderContext, cmd, HDShaderPassNames.m_GBufferName, Utilities.kRendererConfigurationBakedLighting, rangeOpaqueNoAlphaTest, m_Asset.renderingSettings.renderAlphaTestOnlyInDeferredPrepass ? m_DepthStateOpaque : m_DepthStateOpaqueWithPrepass);
                         // but for opaque alpha tested object we use a depth equal and no depth write. And we rely on the shader pass GbufferWithDepthPrepass
-                        RenderOpaqueRenderList(cull, camera, renderContext, cmd, HDShaderPassNames.m_GBufferWithPrepassName, Utilities.GetRendererConfigurationBakedLighting(), rangeOpaqueAlphaTest, m_DepthStateOpaqueWithPrepass);
+                        RenderOpaqueRenderList(cull, camera, renderContext, cmd, HDShaderPassNames.m_GBufferWithPrepassName, Utilities.kRendererConfigurationBakedLighting, rangeOpaqueAlphaTest, m_DepthStateOpaqueWithPrepass);
                     }
                     else
                     {
                         // No depth prepass, use regular depth test - Note that we will render opaque then opaque alpha tested (based on the RenderQueue system)
-                        RenderOpaqueRenderList(cull, camera, renderContext, cmd, HDShaderPassNames.m_GBufferName, Utilities.GetRendererConfigurationBakedLighting(), RenderQueueRange.opaque, m_DepthStateOpaque);
+                        RenderOpaqueRenderList(cull, camera, renderContext, cmd, HDShaderPassNames.m_GBufferName, Utilities.kRendererConfigurationBakedLighting, RenderQueueRange.opaque, m_DepthStateOpaque);
                     }
                 }
             }
@@ -1234,10 +1223,10 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
                 {
                     Utilities.SetRenderTarget(cmd, m_CameraColorBufferRT, m_CameraDepthStencilBufferRT, Utilities.kClearAll, Color.black);
                     // Render Opaque forward
-                    RenderOpaqueRenderList(cull, hdCamera.camera, renderContext, cmd, HDShaderPassNames.m_ForwardDisplayDebugName, Utilities.GetRendererConfigurationBakedLighting());
+                    RenderOpaqueRenderList(cull, hdCamera.camera, renderContext, cmd, HDShaderPassNames.m_ForwardDisplayDebugName, Utilities.kRendererConfigurationBakedLighting);
 
                     // Render forward transparent
-                    RenderTransparentRenderList(cull, hdCamera.camera, renderContext, cmd, HDShaderPassNames.m_ForwardDisplayDebugName, Utilities.GetRendererConfigurationBakedLighting());
+                    RenderTransparentRenderList(cull, hdCamera.camera, renderContext, cmd, HDShaderPassNames.m_ForwardDisplayDebugName, Utilities.kRendererConfigurationBakedLighting);
                 }
             }
 
@@ -1391,11 +1380,11 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
                 if (renderOpaque)
                 {
                     // Forward opaque material always have a prepass (whether or not we use deferred) so we pass the right depth state here.
-                    RenderOpaqueRenderList(cullResults, camera, renderContext, cmd, arrayNames, Utilities.GetRendererConfigurationBakedLighting(), null, m_DepthStateOpaqueWithPrepass);
+                    RenderOpaqueRenderList(cullResults, camera, renderContext, cmd, arrayNames, Utilities.kRendererConfigurationBakedLighting, null, m_DepthStateOpaqueWithPrepass);
                 }
                 else
                 {
-                    RenderTransparentRenderList(cullResults, camera, renderContext, cmd, arrayNames, Utilities.GetRendererConfigurationBakedLighting());
+                    RenderTransparentRenderList(cullResults, camera, renderContext, cmd, arrayNames, Utilities.kRendererConfigurationBakedLighting);
                 }
             }
         }

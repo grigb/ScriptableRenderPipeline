@@ -379,7 +379,7 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
 
         static public void QuickSort(uint[] arr, int left, int right)
         {
-            // For Recusrion
+            // For Recursion
             if (left < right)
             {
                 int pivot = Partition(arr, left, right);

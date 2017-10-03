@@ -1191,12 +1191,16 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
             {
                 // setup GBuffer for rendering
                 Utilities.SetRenderTarget(cmd, m_gbufferManager.GetGBuffers(), m_CameraDepthStencilBufferRT);
+<<<<<<< HEAD
+                // render opaque objects into GBuffer
+                RenderOpaqueRenderList(cull, camera, renderContext, cmd, m_CurrentDebugDisplaySettings.IsDebugDisplayEnabled() ? HDShaderPassNames.m_GBufferDebugDisplayName : HDShaderPassNames.m_GBufferName, Utilities.GetRendererConfigurationBakedLighting());
+=======
 
                 // Render opaque objects into GBuffer
                 if (m_CurrentDebugDisplaySettings.IsDebugDisplayEnabled())
                 {
                     // When doing debug display, the shader has the clip instruction regardless of the depth prepass so we can use regular depth test.
-                    RenderOpaqueRenderList(cull, camera, renderContext, cmd, HDShaderPassNames.m_GBufferDebugDisplayName, Utilities.GetRendererConfigurationBakedLighting(), RenderQueueRange.opaque, m_DepthStateOpaque);
+                    RenderOpaqueRenderList(cull, camera, renderContext, cmd, HDShaderPassNames.m_GBufferDebugDisplayName, Utilities.kRendererConfigurationBakedLighting, RenderQueueRange.opaque, m_DepthStateOpaque);
                 }
                 else
                 {
@@ -1208,14 +1212,15 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
                         // When using depth prepass for opaque alpha test only we need to use regular depth test for normal opaque objects.
                         RenderOpaqueRenderList(cull, camera, renderContext, cmd, HDShaderPassNames.m_GBufferName, Utilities.kRendererConfigurationBakedLighting, rangeOpaqueNoAlphaTest, m_Asset.renderingSettings.renderAlphaTestOnlyInDeferredPrepass ? m_DepthStateOpaque : m_DepthStateOpaqueWithPrepass);
                         // but for opaque alpha tested object we use a depth equal and no depth write. And we rely on the shader pass GbufferWithDepthPrepass
-                        RenderOpaqueRenderList(cull, camera, renderContext, cmd, HDShaderPassNames.m_GBufferWithPrepassName, Utilities.GetRendererConfigurationBakedLighting(), rangeOpaqueAlphaTest, m_DepthStateOpaqueWithPrepass);
+                        RenderOpaqueRenderList(cull, camera, renderContext, cmd, HDShaderPassNames.m_GBufferWithPrepassName, Utilities.kRendererConfigurationBakedLighting, rangeOpaqueAlphaTest, m_DepthStateOpaqueWithPrepass);
                     }
                     else
                     {
                         // No depth prepass, use regular depth test - Note that we will render opaque then opaque alpha tested (based on the RenderQueue system)
-                        RenderOpaqueRenderList(cull, camera, renderContext, cmd, HDShaderPassNames.m_GBufferName, Utilities.GetRendererConfigurationBakedLighting(), RenderQueueRange.opaque, m_DepthStateOpaque);
+                        RenderOpaqueRenderList(cull, camera, renderContext, cmd, HDShaderPassNames.m_GBufferName, Utilities.kRendererConfigurationBakedLighting, RenderQueueRange.opaque, m_DepthStateOpaque);
                     }
                 }
+>>>>>>> refs/remotes/origin/Unity-2017.3
             }
         }
 
@@ -1390,8 +1395,12 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
 
                 if (renderOpaque)
                 {
+<<<<<<< HEAD
+                    RenderOpaqueRenderList(cullResults, camera, renderContext, cmd, arrayNames, Utilities.GetRendererConfigurationBakedLighting());
+=======
                     // Forward opaque material always have a prepass (whether or not we use deferred) so we pass the right depth state here.
-                    RenderOpaqueRenderList(cullResults, camera, renderContext, cmd, arrayNames, Utilities.GetRendererConfigurationBakedLighting(), null, m_DepthStateOpaqueWithPrepass);
+                    RenderOpaqueRenderList(cullResults, camera, renderContext, cmd, arrayNames, Utilities.kRendererConfigurationBakedLighting, null, m_DepthStateOpaqueWithPrepass);
+>>>>>>> refs/remotes/origin/Unity-2017.3
                 }
                 else
                 {
