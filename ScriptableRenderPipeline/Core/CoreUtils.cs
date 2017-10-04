@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Experimental.Rendering.HDPipeline;
@@ -44,14 +44,6 @@ namespace UnityEngine.Experimental.Rendering
             // };
 
             return types;
-        }
-
-        public const RendererConfiguration k_RendererConfigurationBakedLighting = RendererConfiguration.PerObjectLightProbe | RendererConfiguration.PerObjectLightmaps | RendererConfiguration.PerObjectLightProbeProxyVolume;
-        public const RendererConfiguration k_RendererConfigurationBakedLightingWithShadowMask = RendererConfiguration.PerObjectLightProbe | RendererConfiguration.PerObjectLightmaps | RendererConfiguration.PerObjectLightProbeProxyVolume | RendererConfiguration.PerObjectOcclusionProbe | RendererConfiguration.PerObjectShadowMasks;
-
-        public static RendererConfiguration GetRendererConfigurationBakedLighting()
-        {
-            return (ShaderConfig.k_BakedShadowMaskEnable == 1) ? k_RendererConfigurationBakedLightingWithShadowMask : k_RendererConfigurationBakedLighting;
         }
 
         // Render Target Management.

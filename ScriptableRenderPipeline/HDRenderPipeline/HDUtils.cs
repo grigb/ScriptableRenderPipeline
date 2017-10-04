@@ -22,6 +22,12 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
 #endif
 
         public const RendererConfiguration k_RendererConfigurationBakedLighting = RendererConfiguration.PerObjectLightProbe | RendererConfiguration.PerObjectLightmaps | RendererConfiguration.PerObjectLightProbeProxyVolume;
+        public const RendererConfiguration k_RendererConfigurationBakedLightingWithShadowMask = RendererConfiguration.PerObjectLightProbe | RendererConfiguration.PerObjectLightmaps | RendererConfiguration.PerObjectLightProbeProxyVolume | RendererConfiguration.PerObjectOcclusionProbe | RendererConfiguration.PerObjectShadowMasks;
+        
+        public static RendererConfiguration GetRendererConfigurationBakedLighting()
+        {
+            return (ShaderConfig.k_BakedShadowMaskEnable == 1) ? k_RendererConfigurationBakedLightingWithShadowMask : k_RendererConfigurationBakedLighting;
+        }
 
         public static Matrix4x4 GetViewProjectionMatrix(Matrix4x4 worldToViewMatrix, Matrix4x4 projectionMatrix)
         {
