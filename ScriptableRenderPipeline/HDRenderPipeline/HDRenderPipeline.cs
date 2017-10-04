@@ -1206,7 +1206,7 @@ namespace UnityEngine.Experimental.Rendering.HDPipeline
                         RenderQueueRange rangeOpaqueAlphaTest = new RenderQueueRange { min = (int)RenderQueue.AlphaTest, max = (int)RenderQueue.GeometryLast - 1 };
 
                         // When using depth prepass for opaque alpha test only we need to use regular depth test for normal opaque objects.
-                        RenderOpaqueRenderList(cull, camera, renderContext, cmd, HDShaderPassNames.m_GBufferName, HDUtils.k_RendererConfigurationBakedLighting, rangeOpaqueNoAlphaTest, m_Asset.renderingSettings.renderAlphaTestOnlyInDeferredPrepass ? m_DepthStateOpaque : m_DepthStateOpaqueWithPrepass);
+                        RenderOpaqueRenderList(cull, camera, renderContext, cmd, HDShaderPassNames.m_GBufferName, HDUtils.GetRendererConfigurationBakedLighting(), rangeOpaqueNoAlphaTest, m_Asset.renderingSettings.renderAlphaTestOnlyInDeferredPrepass ? m_DepthStateOpaque : m_DepthStateOpaqueWithPrepass);
                         // but for opaque alpha tested object we use a depth equal and no depth write. And we rely on the shader pass GbufferWithDepthPrepass
                         RenderOpaqueRenderList(cull, camera, renderContext, cmd, HDShaderPassNames.m_GBufferWithPrepassName, HDUtils.GetRendererConfigurationBakedLighting(), rangeOpaqueAlphaTest, m_DepthStateOpaqueWithPrepass);
                     }
